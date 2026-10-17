@@ -1,0 +1,67 @@
+<h1>Cursos</h1>
+
+<div class="cartao">
+  <h2>{{ form.id ? 'Editar curso' : 'Novo curso' }}</h2>
+  @if (erro) {
+    <div class="erro">{{ erro }}</div>
+  }
+  <form (ngSubmit)="salvar()">
+    <div class="grade">
+      <label>Sigla <input name="sigla" [(ngModel)]="form.sigla" /></label>
+      <label>Descrição <input name="descricao" [(ngModel)]="form.descricao" /></label>
+      <label>Centro acadêmico
+        <select name="centro" [(ngModel)]="form.centroAcademico.id">
+          @for (centro of centros; track centro.id) {
+            <option [ngValue]="centro.id">{{ centro.sigla }} - {{ centro.nome }}</option>
+          }
+        </select>
+      </label>
+      <label>Coordenador
+        <select name="coordenador" [(ngModel)]="form.coordenadorId">
+          <option [ngValue]="null">Nenhum</option>
+          @for (docente of docentes; track docente.id) {
+            <option [ngValue]="docente.id">{{ docente.nome }}</option>
+          }
+        </select>
+      </label>
+    </div>
+    <p>Turnos:</p>
+    <div class="opcoes">
+      @for (turno of turnos; track turno) {
+        <label><input type="checkbox" [checked]="form.turnos.includes(turno)" (change)="alternarTurno(turno)" /> {{ turno }}</label>
+      }
+    </div>
+    <div class="acoes">
+      <button type="button" class="botao secundario" (click)="limpar()">Cancelar</button>
+      <button type="submit" class="botao">Salvar</button>
+    </div>
+  </form>
+</div>
+
+<div class="cartao">
+  <table>
+    <thead>
+      <tr><th>Sigla</th><th>Descrição</th><th>Centro</th><th>Turnos</th><th>Coordenador</th><th>Cadastro</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (curso of lista; track curso.id) {
+        <tr>
+          <td>{{ curso.sigla }}</td>
+          <td>{{ curso.descricao }}</td>
+          <td>{{ curso.centroAcademico.sigla }}</td>
+          <td>{{ curso.turnos.join(', ') }}</td>
+          <td>{{ curso.coordenador?.nome ?? '-' }}</td>
+          <td>{{ curso.dataCadastro | date: 'dd/MM/yyyy' }}</td>
+          <td><span class="status {{ curso.status }}">{{ curso.status }}</span></td>
+          <td class="botoes">
+            <button class="botao pequeno" (click)="editar(curso)">Editar</button>
+            <button class="botao pequeno secundario" (click)="alterarStatus(curso)">
+              {{ curso.status === 'ATIVO' ? 'Inativar' : 'Reativar' }}
+            </button>
+            <button class="botao pequeno perigo" (click)="excluir(curso)">Excluir</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

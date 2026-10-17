@@ -1,0 +1,71 @@
+<h1>Pedidos de instalação de software</h1>
+
+<div class="cartao">
+  <h2>{{ form.id ? 'Editar pedido' : 'Novo pedido' }}</h2>
+  @if (erro) {
+    <div class="erro">{{ erro }}</div>
+  }
+  <form (ngSubmit)="salvar()">
+    <div class="grade">
+      <label>Laboratório
+        <select name="espaco" [(ngModel)]="form.espaco.id">
+          @for (laboratorio of laboratorios; track laboratorio.id) {
+            <option [ngValue]="laboratorio.id">{{ laboratorio.sigla }} - {{ laboratorio.nome }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <h3>Softwares</h3>
+    @for (software of form.softwares; track $index) {
+      <div class="grade item">
+        <label>Nome <input name="nome{{ $index }}" [(ngModel)]="software.nome" /></label>
+        <label>URL de download <input name="url{{ $index }}" [(ngModel)]="software.urlDownload" /></label>
+        <label>Tipo
+          <select name="tipo{{ $index }}" [(ngModel)]="software.tipo">
+            <option value="LIVRE">Software livre</option>
+            <option value="PROPRIETARIO">Proprietário</option>
+          </select>
+        </label>
+        <label>Objetivo <input name="objetivo{{ $index }}" [(ngModel)]="software.objetivo" /></label>
+        <button type="button" class="botao perigo" (click)="removerSoftware($index)">Remover</button>
+      </div>
+    }
+    <button type="button" class="botao secundario" (click)="adicionarSoftware()">+ Software</button>
+
+    <div class="acoes">
+      <button type="button" class="botao secundario" (click)="limpar()">Cancelar</button>
+      <button type="submit" class="botao">Enviar</button>
+    </div>
+  </form>
+</div>
+
+<div class="cartao">
+  <h2>Meus pedidos</h2>
+  <table>
+    <thead>
+      <tr><th>Laboratório</th><th>Softwares</th><th>Data</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (pedido of lista; track pedido.id) {
+        <tr>
+          <td>{{ pedido.espaco.sigla }}</td>
+          <td>{{ nomesDosSoftwares(pedido) }}</td>
+          <td>{{ pedido.dataSolicitacao | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            <span class="status {{ pedido.status }}">{{ pedido.status }}</span>
+            @if (pedido.justificativa) {
+              <div class="suave">{{ pedido.justificativa }}</div>
+            }
+          </td>
+          <td class="botoes">
+            @if (pedido.status === 'PENDENTE') {
+              <button class="botao pequeno" (click)="editar(pedido)">Editar</button>
+              <button class="botao pequeno secundario" (click)="inativar(pedido)">Inativar</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

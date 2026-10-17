@@ -1,0 +1,20 @@
+# Segredos e configuracao local
+.env
+*.env.local
+
+# Back-End (Maven)
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Front-End (Angular)
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# IDEs / SO
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db

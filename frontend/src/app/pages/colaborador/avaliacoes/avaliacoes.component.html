@@ -1,0 +1,67 @@
+<h1>Avaliar solicitações</h1>
+
+@if (erro) {
+  <div class="erro">{{ erro }}</div>
+}
+
+<div class="cartao">
+  <h2>Reservas de espaço</h2>
+  <table>
+    <thead>
+      <tr><th>Espaço</th><th>Data</th><th>Horário</th><th>Solicitante</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (reserva of reservas; track reserva.id) {
+        <tr>
+          <td>{{ reserva.espaco.sigla }} - {{ reserva.espaco.nome }}</td>
+          <td>{{ reserva.data | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ reserva.horaInicio.slice(0, 5) }} às {{ reserva.horaFim.slice(0, 5) }}</td>
+          <td>{{ reserva.solicitante.nome }}</td>
+          <td>
+            <span class="status {{ reserva.status }}">{{ reserva.status }}</span>
+            @if (reserva.justificativa) {
+              <div class="suave">{{ reserva.justificativa }}</div>
+            }
+          </td>
+          <td class="botoes">
+            @if (reserva.status === 'PENDENTE') {
+              <button class="botao pequeno" (click)="aprovar('solicitacoes-espaco', reserva.id)">Aprovar</button>
+              <button class="botao pequeno perigo" (click)="reprovar('solicitacoes-espaco', reserva.id)">Reprovar</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="cartao">
+  <h2>Instalação de software</h2>
+  <table>
+    <thead>
+      <tr><th>Laboratório</th><th>Softwares</th><th>Solicitante</th><th>Data</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (pedido of pedidosSoftware; track pedido.id) {
+        <tr>
+          <td>{{ pedido.espaco.sigla }}</td>
+          <td>{{ nomesDosSoftwares(pedido) }}</td>
+          <td>{{ pedido.solicitante.nome }}</td>
+          <td>{{ pedido.dataSolicitacao | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            <span class="status {{ pedido.status }}">{{ pedido.status }}</span>
+            @if (pedido.justificativa) {
+              <div class="suave">{{ pedido.justificativa }}</div>
+            }
+          </td>
+          <td class="botoes">
+            @if (pedido.status === 'PENDENTE') {
+              <button class="botao pequeno" (click)="aprovar('solicitacoes-software', pedido.id)">Aprovar</button>
+              <button class="botao pequeno perigo" (click)="reprovar('solicitacoes-software', pedido.id)">Reprovar</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

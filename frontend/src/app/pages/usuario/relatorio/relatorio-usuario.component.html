@@ -1,0 +1,46 @@
+@if (relatorio) {
+  <div class="cartao">
+    <div class="cabecalho-relatorio">
+      <div>
+        <h2>{{ relatorio.titulo }}</h2>
+        <p class="suave">Emitido por {{ relatorio.emitidoPor }} em {{ relatorio.emitidoEm | date: 'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+      <button class="botao secundario nao-imprimir" (click)="imprimir()">Imprimir</button>
+    </div>
+
+    <h3>Solicitações de espaço</h3>
+    <table>
+      <thead>
+        <tr><th>Espaço</th><th>Data</th><th>Horário</th><th>Status</th><th>Justificativa</th></tr>
+      </thead>
+      <tbody>
+        @for (reserva of relatorio.solicitacoesEspaco; track reserva.id) {
+          <tr>
+            <td>{{ reserva.espaco.sigla }} - {{ reserva.espaco.nome }}</td>
+            <td>{{ reserva.data | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ reserva.horaInicio.slice(0, 5) }} às {{ reserva.horaFim.slice(0, 5) }}</td>
+            <td>{{ reserva.status }}</td>
+            <td>{{ reserva.justificativa ?? '-' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <h3>Solicitações de software</h3>
+    <table>
+      <thead>
+        <tr><th>Laboratório</th><th>Softwares</th><th>Status</th><th>Justificativa</th></tr>
+      </thead>
+      <tbody>
+        @for (pedido of relatorio.solicitacoesSoftware; track pedido.id) {
+          <tr>
+            <td>{{ pedido.espaco.sigla }}</td>
+            <td>{{ nomesDosSoftwares(pedido) }}</td>
+            <td>{{ pedido.status }}</td>
+            <td>{{ pedido.justificativa ?? '-' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

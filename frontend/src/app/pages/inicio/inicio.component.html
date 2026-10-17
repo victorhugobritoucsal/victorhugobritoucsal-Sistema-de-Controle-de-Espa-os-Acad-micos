@@ -1,0 +1,23 @@
+<h1>Olá, {{ auth.usuario.nome }}</h1>
+<p class="suave">Escolha uma opção no menu ao lado.</p>
+
+<div class="atalhos">
+  @if (auth.temPerfil('ADMINISTRADOR')) {
+    <a class="cartao atalho" routerLink="/admin/ies">
+      <strong>Administrador</strong>
+      <span>Cadastre IES, centros acadêmicos, cursos, docentes e usuários.</span>
+    </a>
+  }
+  @if (auth.temPerfil('COLABORADOR')) {
+    <a class="cartao atalho" routerLink="/colaborador/avaliacoes">
+      <strong>Colaborador</strong>
+      <span>Cadastre espaços e avalie as solicitações do seu centro acadêmico.</span>
+    </a>
+  }
+  @if (auth.temPerfil('USUARIO')) {
+    <a class="cartao atalho" routerLink="/usuario/reservas">
+      <strong>Usuário</strong>
+      <span>Solicite espaços e a instalação de softwares nos laboratórios.</span>
+    </a>
+  }
+</div>

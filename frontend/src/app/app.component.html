@@ -1,0 +1,45 @@
+@if (auth.usuario) {
+  <div class="layout">
+    <aside class="menu">
+      <div class="marca">Espaços <span>Acadêmicos</span></div>
+      <a routerLink="/inicio" routerLinkActive="ativo">Início</a>
+
+      @if (auth.temPerfil('ADMINISTRADOR')) {
+        <span class="grupo">Administrador</span>
+        <a routerLink="/admin/ies" routerLinkActive="ativo">IES</a>
+        <a routerLink="/admin/centros" routerLinkActive="ativo">Centros Acadêmicos</a>
+        <a routerLink="/admin/cursos" routerLinkActive="ativo">Cursos</a>
+        <a routerLink="/admin/docentes" routerLinkActive="ativo">Docentes</a>
+        <a routerLink="/admin/usuarios" routerLinkActive="ativo">Usuários</a>
+        <a routerLink="/admin/auditoria" routerLinkActive="ativo">Auditoria</a>
+        <a routerLink="/admin/relatorios" routerLinkActive="ativo">Relatórios</a>
+      }
+
+      @if (auth.temPerfil('COLABORADOR')) {
+        <span class="grupo">Colaborador</span>
+        <a routerLink="/colaborador/espacos" routerLinkActive="ativo">Espaços</a>
+        <a routerLink="/colaborador/avaliacoes" routerLinkActive="ativo">Avaliar solicitações</a>
+        <a routerLink="/colaborador/relatorio" routerLinkActive="ativo">Relatório</a>
+      }
+
+      @if (auth.temPerfil('USUARIO')) {
+        <span class="grupo">Usuário</span>
+        <a routerLink="/usuario/reservas" routerLinkActive="ativo">Reservas de espaço</a>
+        <a routerLink="/usuario/softwares" routerLinkActive="ativo">Pedidos de software</a>
+        <a routerLink="/usuario/relatorio" routerLinkActive="ativo">Meus pedidos</a>
+      }
+
+      <div class="usuario-logado">
+        <strong>{{ auth.usuario.nome }}</strong>
+        <span>{{ auth.usuario.perfis.join(', ') }}</span>
+        <button class="botao secundario" (click)="auth.logout()">Sair</button>
+      </div>
+    </aside>
+
+    <main class="conteudo">
+      <router-outlet />
+    </main>
+  </div>
+} @else {
+  <router-outlet />
+}

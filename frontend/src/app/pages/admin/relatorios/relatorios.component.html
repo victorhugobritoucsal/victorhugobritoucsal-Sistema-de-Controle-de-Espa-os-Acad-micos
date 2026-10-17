@@ -1,0 +1,66 @@
+<h1>Relatórios</h1>
+
+<div class="acoes esquerda nao-imprimir">
+  <button class="botao" (click)="emitir('institucional')">Relatório institucional</button>
+  <button class="botao" (click)="emitir('docentes')">Relatório de docentes</button>
+</div>
+
+@if (relatorio) {
+  <div class="cartao">
+    <div class="cabecalho-relatorio">
+      <div>
+        <h2>{{ relatorio.titulo }}</h2>
+        <p class="suave">Emitido por {{ relatorio.emitidoPor }} em {{ relatorio.emitidoEm | date: 'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+      <button class="botao secundario nao-imprimir" (click)="imprimir()">Imprimir</button>
+    </div>
+
+    @if (tipo === 'institucional') {
+      @for (ies of relatorio.ies; track ies.id) {
+        <h3>{{ ies.sigla }} - {{ ies.nome }} ({{ ies.status }})</h3>
+        <p>Reitor: {{ ies.reitor }}</p>
+        @for (pro of ies.proReitorias; track pro.id) {
+          <p class="suave">{{ pro.nome }}: {{ pro.titular }} {{ pro.nomeacao ? '(' + pro.nomeacao + ')' : '' }}</p>
+        }
+        @for (centro of centrosDa(ies); track centro.id) {
+          <h4>{{ centro.sigla }} - {{ centro.nome }} | Coordenador: {{ centro.coordenador?.nome ?? '-' }}</h4>
+          <table>
+            <thead>
+              <tr><th>Curso</th><th>Descrição</th><th>Turnos</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              @for (curso of cursosDo(centro); track curso.id) {
+                <tr>
+                  <td>{{ curso.sigla }}</td>
+                  <td>{{ curso.descricao }}</td>
+                  <td>{{ curso.turnos.join(', ') }}</td>
+                  <td>{{ curso.status }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      }
+    }
+
+    @if (tipo === 'docentes') {
+      <table>
+        <thead>
+          <tr><th>Matrícula</th><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Centro acadêmico</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          @for (docente of relatorio.docentes; track docente.id) {
+            <tr>
+              <td>{{ docente.matricula }}</td>
+              <td>{{ docente.nome }}</td>
+              <td>{{ docente.email }}</td>
+              <td>{{ docente.telefone }}</td>
+              <td>{{ docente.centroAcademico.sigla }} - {{ docente.centroAcademico.nome }}</td>
+              <td>{{ docente.status }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+}

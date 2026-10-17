@@ -1,0 +1,61 @@
+<h1>Reservas de espaço</h1>
+<p class="suave">Cada solicitação é para um único espaço. Seu nome e sua escola são preenchidos automaticamente.</p>
+
+<div class="cartao">
+  <h2>{{ form.id ? 'Editar solicitação' : 'Nova solicitação' }}</h2>
+  @if (erro) {
+    <div class="erro">{{ erro }}</div>
+  }
+  <form (ngSubmit)="salvar()">
+    <div class="grade">
+      <label>Espaço
+        <select name="espaco" [(ngModel)]="form.espaco.id">
+          @for (espaco of espacos; track espaco.id) {
+            <option [ngValue]="espaco.id">{{ espaco.sigla }} - {{ espaco.nome }} ({{ espaco.centroAcademico.sigla }})</option>
+          }
+        </select>
+      </label>
+      <label>Data <input name="data" type="date" [(ngModel)]="form.data" /></label>
+      <label>Hora inicial <input name="horaInicio" type="time" [(ngModel)]="form.horaInicio" /></label>
+      <label>Hora final <input name="horaFim" type="time" [(ngModel)]="form.horaFim" /></label>
+    </div>
+    <div class="acoes">
+      <button type="button" class="botao secundario" (click)="limpar()">Cancelar</button>
+      <button type="submit" class="botao">Enviar</button>
+    </div>
+  </form>
+</div>
+
+<div class="cartao">
+  <h2>Minhas solicitações</h2>
+  <table>
+    <thead>
+      <tr><th>Espaço</th><th>Data</th><th>Horário</th><th>Solicitada em</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (reserva of lista; track reserva.id) {
+        <tr>
+          <td>{{ reserva.espaco.sigla }} - {{ reserva.espaco.nome }}</td>
+          <td>{{ reserva.data | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ reserva.horaInicio.slice(0, 5) }} às {{ reserva.horaFim.slice(0, 5) }}</td>
+          <td>{{ reserva.dataSolicitacao | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <span class="status {{ reserva.status }}">{{ reserva.status }}</span>
+            @if (reserva.justificativa) {
+              <div class="suave">{{ reserva.justificativa }}</div>
+            }
+          </td>
+          <td class="botoes">
+            @if (reserva.status === 'PENDENTE') {
+              <button class="botao pequeno" (click)="editar(reserva)">Editar</button>
+              <button class="botao pequeno secundario" (click)="inativar(reserva)">Inativar</button>
+            }
+            @if (reserva.status === 'APROVADA') {
+              <button class="botao pequeno" (click)="liberar(reserva)">Liberar espaço</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

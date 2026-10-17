@@ -1,0 +1,19 @@
+<h1>Logs de auditoria</h1>
+<p class="suave">Últimas 200 ações realizadas no sistema.</p>
+
+<div class="cartao">
+  <table>
+    <thead>
+      <tr><th>Data e hora</th><th>Usuário</th><th>Ação</th></tr>
+    </thead>
+    <tbody>
+      @for (log of logs; track log.id) {
+        <tr>
+          <td>{{ log.dataHora | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+          <td>{{ log.usuario }}</td>
+          <td>{{ log.acao }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

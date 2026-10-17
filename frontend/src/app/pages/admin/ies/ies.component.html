@@ -1,0 +1,60 @@
+<h1>Instituições de Ensino Superior</h1>
+
+<div class="cartao">
+  <h2>{{ form.id ? 'Editar IES' : 'Nova IES' }}</h2>
+  @if (erro) {
+    <div class="erro">{{ erro }}</div>
+  }
+  <form (ngSubmit)="salvar()">
+    <div class="grade">
+      <label>Sigla <input name="sigla" [(ngModel)]="form.sigla" /></label>
+      <label>Nome <input name="nome" [(ngModel)]="form.nome" /></label>
+      <label>E-mail <input name="email" [(ngModel)]="form.email" /></label>
+      <label>Telefone <input name="telefone" [(ngModel)]="form.telefone" /></label>
+      <label>Reitor <input name="reitor" [(ngModel)]="form.reitor" /></label>
+    </div>
+
+    <h3>Pró-reitorias</h3>
+    @for (pro of form.proReitorias; track $index) {
+      <div class="grade item">
+        <label>Pró-reitoria <input name="proNome{{ $index }}" [(ngModel)]="pro.nome" /></label>
+        <label>Pró-reitor <input name="proTitular{{ $index }}" [(ngModel)]="pro.titular" /></label>
+        <label>Nomeação <input name="proNomeacao{{ $index }}" [(ngModel)]="pro.nomeacao" /></label>
+        <button type="button" class="botao perigo" (click)="removerProReitoria($index)">Remover</button>
+      </div>
+    }
+    <button type="button" class="botao secundario" (click)="adicionarProReitoria()">+ Pró-reitoria</button>
+
+    <div class="acoes">
+      <button type="button" class="botao secundario" (click)="limpar()">Cancelar</button>
+      <button type="submit" class="botao">Salvar</button>
+    </div>
+  </form>
+</div>
+
+<div class="cartao">
+  <table>
+    <thead>
+      <tr><th>Sigla</th><th>Nome</th><th>Reitor</th><th>Pró-reitorias</th><th>Cadastro</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (ies of lista; track ies.id) {
+        <tr>
+          <td>{{ ies.sigla }}</td>
+          <td>{{ ies.nome }}</td>
+          <td>{{ ies.reitor }}</td>
+          <td>{{ ies.proReitorias.length }}</td>
+          <td>{{ ies.dataCadastro | date: 'dd/MM/yyyy' }}</td>
+          <td><span class="status {{ ies.status }}">{{ ies.status }}</span></td>
+          <td class="botoes">
+            <button class="botao pequeno" (click)="editar(ies)">Editar</button>
+            <button class="botao pequeno secundario" (click)="alterarStatus(ies)">
+              {{ ies.status === 'ATIVO' ? 'Inativar' : 'Reativar' }}
+            </button>
+            <button class="botao pequeno perigo" (click)="excluir(ies)">Excluir</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

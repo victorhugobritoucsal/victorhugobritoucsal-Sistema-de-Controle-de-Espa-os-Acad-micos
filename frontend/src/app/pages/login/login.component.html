@@ -1,0 +1,14 @@
+<div class="tela-login">
+  <form class="cartao" (ngSubmit)="entrar()">
+    <h1>Espaços Acadêmicos</h1>
+    <p class="suave">Sistema de Controle de Espaços Acadêmicos</p>
+
+    @if (erro) {
+      <div class="erro">{{ erro }}</div>
+    }
+
+    <label>Login <input name="login" [(ngModel)]="login" /></label>
+    <label>Senha <input name="senha" type="password" [(ngModel)]="senha" /></label>
+    <button class="botao" type="submit">Entrar</button>
+  </form>
+</div>

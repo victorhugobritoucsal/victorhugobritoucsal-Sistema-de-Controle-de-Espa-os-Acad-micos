@@ -1,0 +1,67 @@
+<h1>Centros Acadêmicos</h1>
+
+<div class="cartao">
+  <h2>{{ form.id ? 'Editar centro acadêmico' : 'Novo centro acadêmico' }}</h2>
+  @if (erro) {
+    <div class="erro">{{ erro }}</div>
+  }
+  <form (ngSubmit)="salvar()">
+    <div class="grade">
+      <label>Sigla <input name="sigla" [(ngModel)]="form.sigla" /></label>
+      <label>Nome <input name="nome" [(ngModel)]="form.nome" /></label>
+      <label>E-mail <input name="email" [(ngModel)]="form.email" /></label>
+      <label>Telefone <input name="telefone" [(ngModel)]="form.telefone" /></label>
+      <label>IES
+        <select name="ies" [(ngModel)]="form.ies.id">
+          @for (ies of listaIes; track ies.id) {
+            <option [ngValue]="ies.id">{{ ies.sigla }} - {{ ies.nome }}</option>
+          }
+        </select>
+      </label>
+      @if (form.id) {
+        <label>Coordenador
+          <select name="coordenador" [(ngModel)]="form.coordenadorId">
+            <option [ngValue]="null">Nenhum</option>
+            @for (docente of docentesDoCentro(); track docente.id) {
+              <option [ngValue]="docente.id">{{ docente.nome }}</option>
+            }
+          </select>
+        </label>
+      }
+    </div>
+    @if (!form.id) {
+      <p class="suave">O coordenador é escolhido depois, editando o centro, entre os docentes dele.</p>
+    }
+    <div class="acoes">
+      <button type="button" class="botao secundario" (click)="limpar()">Cancelar</button>
+      <button type="submit" class="botao">Salvar</button>
+    </div>
+  </form>
+</div>
+
+<div class="cartao">
+  <table>
+    <thead>
+      <tr><th>Sigla</th><th>Nome</th><th>IES</th><th>Coordenador</th><th>Cadastro</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (centro of lista; track centro.id) {
+        <tr>
+          <td>{{ centro.sigla }}</td>
+          <td>{{ centro.nome }}</td>
+          <td>{{ centro.ies.sigla }}</td>
+          <td>{{ centro.coordenador?.nome ?? '-' }}</td>
+          <td>{{ centro.dataCadastro | date: 'dd/MM/yyyy' }}</td>
+          <td><span class="status {{ centro.status }}">{{ centro.status }}</span></td>
+          <td class="botoes">
+            <button class="botao pequeno" (click)="editar(centro)">Editar</button>
+            <button class="botao pequeno secundario" (click)="alterarStatus(centro)">
+              {{ centro.status === 'ATIVO' ? 'Inativar' : 'Reativar' }}
+            </button>
+            <button class="botao pequeno perigo" (click)="excluir(centro)">Excluir</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

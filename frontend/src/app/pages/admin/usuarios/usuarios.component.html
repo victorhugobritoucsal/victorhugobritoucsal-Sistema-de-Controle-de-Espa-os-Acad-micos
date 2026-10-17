@@ -1,0 +1,61 @@
+<h1>Usuários e perfis</h1>
+
+<div class="cartao">
+  <h2>{{ form.id ? 'Editar usuário' : 'Novo usuário' }}</h2>
+  @if (erro) {
+    <div class="erro">{{ erro }}</div>
+  }
+  <form (ngSubmit)="salvar()">
+    <div class="grade">
+      <label>Login <input name="login" [(ngModel)]="form.login" [disabled]="form.id" /></label>
+      <label>Nome <input name="nome" [(ngModel)]="form.nome" /></label>
+      <label>Senha
+        <input name="senha" type="password" [(ngModel)]="form.senha"
+          [placeholder]="form.id ? 'Deixe em branco para manter' : 'Mínimo 6 caracteres'" />
+      </label>
+      <label>Docente
+        <select name="docente" [(ngModel)]="form.docenteId">
+          <option [ngValue]="null">Nenhum (apenas administrador)</option>
+          @for (docente of docentes; track docente.id) {
+            <option [ngValue]="docente.id">{{ docente.matricula }} - {{ docente.nome }}</option>
+          }
+        </select>
+      </label>
+    </div>
+    <p>Perfis (pode marcar mais de um):</p>
+    <div class="opcoes">
+      @for (perfil of perfis; track perfil) {
+        <label><input type="checkbox" [checked]="form.perfis.includes(perfil)" (change)="alternarPerfil(perfil)" /> {{ perfil }}</label>
+      }
+    </div>
+    <div class="acoes">
+      <button type="button" class="botao secundario" (click)="limpar()">Cancelar</button>
+      <button type="submit" class="botao">Salvar</button>
+    </div>
+  </form>
+</div>
+
+<div class="cartao">
+  <table>
+    <thead>
+      <tr><th>Login</th><th>Nome</th><th>Perfis</th><th>Docente</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (usuario of lista; track usuario.id) {
+        <tr>
+          <td>{{ usuario.login }}</td>
+          <td>{{ usuario.nome }}</td>
+          <td>{{ usuario.perfis.join(', ') }}</td>
+          <td>{{ usuario.docente?.matricula ?? '-' }}</td>
+          <td><span class="status {{ usuario.ativo ? 'ATIVO' : 'INATIVO' }}">{{ usuario.ativo ? 'ATIVO' : 'INATIVO' }}</span></td>
+          <td class="botoes">
+            <button class="botao pequeno" (click)="editar(usuario)">Editar</button>
+            <button class="botao pequeno secundario" (click)="alterarStatus(usuario)">
+              {{ usuario.ativo ? 'Inativar' : 'Reativar' }}
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

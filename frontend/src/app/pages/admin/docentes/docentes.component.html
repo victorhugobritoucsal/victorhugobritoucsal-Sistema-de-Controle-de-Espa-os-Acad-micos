@@ -1,0 +1,76 @@
+<h1>Docentes</h1>
+
+<div class="cartao">
+  <h2>{{ form.id ? 'Editar docente' : 'Novo docente' }}</h2>
+  @if (erro) {
+    <div class="erro">{{ erro }}</div>
+  }
+  <form (ngSubmit)="salvar()">
+    <div class="grade">
+      <label>Matrícula <input name="matricula" [(ngModel)]="form.matricula" /></label>
+      <label>Nome completo <input name="nome" [(ngModel)]="form.nome" /></label>
+      <label>E-mail <input name="email" [(ngModel)]="form.email" /></label>
+      <label>Telefone <input name="telefone" [(ngModel)]="form.telefone" /></label>
+      <label>Centro acadêmico
+        <select name="centro" [(ngModel)]="form.centroAcademico.id">
+          @for (centro of centros; track centro.id) {
+            <option [ngValue]="centro.id">{{ centro.sigla }} - {{ centro.nome }}</option>
+          }
+        </select>
+      </label>
+    </div>
+    <div class="acoes">
+      <button type="button" class="botao secundario" (click)="limpar()">Cancelar</button>
+      <button type="submit" class="botao">Salvar</button>
+    </div>
+  </form>
+</div>
+
+<div class="cartao">
+  <table>
+    <thead>
+      <tr><th>Matrícula</th><th>Nome</th><th>E-mail</th><th>Centro</th><th>Cadastro</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (docente of lista; track docente.id) {
+        <tr>
+          <td>{{ docente.matricula }}</td>
+          <td>{{ docente.nome }}</td>
+          <td>{{ docente.email }}</td>
+          <td>{{ docente.centroAcademico.sigla }}</td>
+          <td>{{ docente.dataCadastro | date: 'dd/MM/yyyy' }}</td>
+          <td><span class="status {{ docente.status }}">{{ docente.status }}</span></td>
+          <td class="botoes">
+            <button class="botao pequeno" (click)="editar(docente)">Editar</button>
+            @if (docente.status === 'ATIVO') {
+              <button class="botao pequeno secundario" (click)="inativar(docente)">Inativar</button>
+            } @else {
+              <button class="botao pequeno secundario" (click)="reativar(docente)">Reativar</button>
+            }
+            <button class="botao pequeno secundario" (click)="verHistorico(docente)">Histórico</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (docenteDoHistorico) {
+  <div class="cartao">
+    <h2>Histórico de {{ docenteDoHistorico.nome }}</h2>
+    <table>
+      <thead>
+        <tr><th>Data</th><th>Ação</th><th>Motivo</th></tr>
+      </thead>
+      <tbody>
+        @for (item of historico; track item.id) {
+          <tr>
+            <td>{{ item.data | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ item.acao }}</td>
+            <td>{{ item.motivo ?? '-' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

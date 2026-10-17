@@ -1,0 +1,94 @@
+<h1>Espaços acadêmicos</h1>
+<p class="suave">Espaços do seu centro acadêmico. Todo espaço novo começa como DISPONIVEL.</p>
+
+<div class="cartao">
+  <h2>{{ form.id ? 'Editar espaço' : 'Novo espaço' }}</h2>
+  @if (erro) {
+    <div class="erro">{{ erro }}</div>
+  }
+  <form (ngSubmit)="salvar()">
+    <div class="grade">
+      <label>Sigla <input name="sigla" [(ngModel)]="form.sigla" /></label>
+      <label>Nome <input name="nome" [(ngModel)]="form.nome" /></label>
+      <label>Tipo
+        <select name="tipo" [(ngModel)]="form.tipo">
+          <option value="SALA">Sala</option>
+          <option value="LABORATORIO">Laboratório</option>
+          <option value="AUDITORIO">Auditório</option>
+        </select>
+      </label>
+      <label>Capacidade <input name="capacidade" type="number" [(ngModel)]="form.capacidade" /></label>
+      <label>Localização <input name="localizacao" [(ngModel)]="form.localizacao" /></label>
+      <label>Descrição <input name="descricao" [(ngModel)]="form.descricao" /></label>
+    </div>
+
+    @if (form.tipo === 'LABORATORIO') {
+      <div class="opcoes">
+        <label><input type="checkbox" name="labInformatica" [(ngModel)]="form.laboratorioInformatica" /> Laboratório de informática</label>
+      </div>
+    }
+
+    @if (form.laboratorioInformatica) {
+      <div class="grade">
+        <label>Tipo dos computadores <input name="tipoComputadores" [(ngModel)]="form.tipoComputadores" /></label>
+      </div>
+      <h3>Softwares instalados</h3>
+      @for (software of form.softwares; track $index) {
+        <div class="grade item">
+          <label>Nome <input name="swNome{{ $index }}" [(ngModel)]="software.nome" /></label>
+          <label>URL de download <input name="swUrl{{ $index }}" [(ngModel)]="software.urlDownload" /></label>
+          <label>Tipo
+            <select name="swTipo{{ $index }}" [(ngModel)]="software.tipo">
+              <option value="LIVRE">Software livre</option>
+              <option value="PROPRIETARIO">Proprietário</option>
+            </select>
+          </label>
+          <label>Objetivo <input name="swObjetivo{{ $index }}" [(ngModel)]="software.objetivo" /></label>
+          <label>Disciplinas <input name="swDisciplinas{{ $index }}" [(ngModel)]="software.disciplinas" /></label>
+          <button type="button" class="botao perigo" (click)="removerSoftware($index)">Remover</button>
+        </div>
+      }
+      <button type="button" class="botao secundario" (click)="adicionarSoftware()">+ Software</button>
+    }
+
+    <div class="acoes">
+      <button type="button" class="botao secundario" (click)="limpar()">Cancelar</button>
+      <button type="submit" class="botao">Salvar</button>
+    </div>
+  </form>
+</div>
+
+<div class="cartao">
+  <table>
+    <thead>
+      <tr><th>Sigla</th><th>Nome</th><th>Tipo</th><th>Capacidade</th><th>Localização</th><th>Softwares</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (espaco of lista; track espaco.id) {
+        <tr>
+          <td>{{ espaco.sigla }}</td>
+          <td>{{ espaco.nome }}</td>
+          <td>{{ espaco.tipo }}{{ espaco.laboratorioInformatica ? ' (informática)' : '' }}</td>
+          <td>{{ espaco.capacidade }}</td>
+          <td>{{ espaco.localizacao }}</td>
+          <td>{{ espaco.softwares.length }}</td>
+          <td>
+            <span class="status {{ espaco.status }}">{{ espaco.status }}</span>
+            @if (espaco.motivoInativacao) {
+              <div class="suave">{{ espaco.motivoInativacao }}</div>
+            }
+          </td>
+          <td class="botoes">
+            <button class="botao pequeno" (click)="editar(espaco)">Editar</button>
+            @if (espaco.status === 'INATIVO') {
+              <button class="botao pequeno secundario" (click)="reativar(espaco)">Reativar</button>
+            } @else {
+              <button class="botao pequeno secundario" (click)="inativar(espaco)">Inativar</button>
+            }
+            <button class="botao pequeno perigo" (click)="excluir(espaco)">Excluir</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

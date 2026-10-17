@@ -1,0 +1,67 @@
+@if (relatorio) {
+  <div class="cartao">
+    <div class="cabecalho-relatorio">
+      <div>
+        <h2>{{ relatorio.titulo }}</h2>
+        <p class="suave">Emitido por {{ relatorio.emitidoPor }} em {{ relatorio.emitidoEm | date: 'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+      <button class="botao secundario nao-imprimir" (click)="imprimir()">Imprimir</button>
+    </div>
+
+    <h3>Espaços cadastrados</h3>
+    <table>
+      <thead>
+        <tr><th>Sigla</th><th>Nome</th><th>Tipo</th><th>Capacidade</th><th>Cadastro</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        @for (espaco of relatorio.espacos; track espaco.id) {
+          <tr>
+            <td>{{ espaco.sigla }}</td>
+            <td>{{ espaco.nome }}</td>
+            <td>{{ espaco.tipo }}</td>
+            <td>{{ espaco.capacidade }}</td>
+            <td>{{ espaco.dataCadastro | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ espaco.status }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <h3>Solicitações de espaço</h3>
+    <table>
+      <thead>
+        <tr><th>Espaço</th><th>Data</th><th>Horário</th><th>Solicitante</th><th>Status</th><th>Justificativa</th></tr>
+      </thead>
+      <tbody>
+        @for (reserva of relatorio.solicitacoesEspaco; track reserva.id) {
+          <tr>
+            <td>{{ reserva.espaco.sigla }}</td>
+            <td>{{ reserva.data | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ reserva.horaInicio.slice(0, 5) }} às {{ reserva.horaFim.slice(0, 5) }}</td>
+            <td>{{ reserva.solicitante.nome }}</td>
+            <td>{{ reserva.status }}</td>
+            <td>{{ reserva.justificativa ?? '-' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <h3>Solicitações de software</h3>
+    <table>
+      <thead>
+        <tr><th>Laboratório</th><th>Quantidade de softwares</th><th>Solicitante</th><th>Status</th><th>Justificativa</th></tr>
+      </thead>
+      <tbody>
+        @for (pedido of relatorio.solicitacoesSoftware; track pedido.id) {
+          <tr>
+            <td>{{ pedido.espaco.sigla }}</td>
+            <td>{{ pedido.softwares.length }}</td>
+            <td>{{ pedido.solicitante.nome }}</td>
+            <td>{{ pedido.status }}</td>
+            <td>{{ pedido.justificativa ?? '-' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
